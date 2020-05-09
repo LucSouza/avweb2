@@ -1,5 +1,13 @@
 import React, { Component } from "react";
 import ProductDataService from "../../services/ProductServices";
+import {
+       Button,
+    Jumbotron,
+    InputGroup,
+    InputGroupAddon,
+    InputGroupText,
+    Input,
+} from "reactstrap";
 
 export default class Table extends Component {
     constructor(props) {
@@ -15,7 +23,7 @@ export default class Table extends Component {
         };
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.getProducts();
     }
 
@@ -33,7 +41,6 @@ export default class Table extends Component {
                 this.setState({
                     products: response.data,
                 });
-                console.log(response.data);
             })
             .catch((e) => {
                 console.log(e);
@@ -43,8 +50,9 @@ export default class Table extends Component {
         ProductDataService.getAll()
             .then((response) => {
                 this.setState({
-                    products: response.data,
+                    products: [response.data],
                 });
+               
             })
             .catch((e) => {
                 console.log(e);
@@ -56,20 +64,23 @@ export default class Table extends Component {
         this.setState({});
     }
 
-   
     renderTableData() {
+        
         return this.state.products.map((product, index) => {
-           const { id, name, costPrice, sellPrice } = product //destructuring
-           return (
-              <tr key={id}>
-                 <td>{id}</td>
-                 <td>{name}</td>
-                 <td>{costPrice}</td>
-                 <td>{sellPrice}</td>
-              </tr>
-           )
-        })
-     }
+            const { id, name, costPrice, sellPrice } = product;
+           
+            //destructuring
+            return (
+                
+                <tr key={index}>
+                    <td>{id}</td>
+                    <td>{name}</td>
+                    <td>{costPrice}</td>
+                    <td>{sellPrice}</td>
+                </tr>
+            );
+        });
+    }
     // return this.state.products.map((product, index) => {
     //     const { id, name, costPrice, sellPrice } = product;
     //     return (
@@ -85,10 +96,23 @@ export default class Table extends Component {
     render() {
         return (
             <div>
-                <h1 id="title">Atualiza preço de Produto</h1>
+                    <Jumbotron>
+                <h1 className="display-5" align="center">
+                    Atualiza preço de Produto
+                </h1>
+            </Jumbotron>
+
                 <table id="products">
                     <tbody>{this.renderTableData()}</tbody>
                 </table>
+                <InputGroup>
+                <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Margem de Lucro (%):</InputGroupText>
+                </InputGroupAddon>
+                <Input type="Number" placeholder=" " />
+            </InputGroup>
+            <br />
+            <Button color="secondary">Atualizar preço</Button>{" "}
             </div>
         );
     }
